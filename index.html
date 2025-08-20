@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jam Digital Real-Time</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+        #clock-container {
+            border: 2px solid white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        #date {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        #time {
+            font-size: 3em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="clock-container">
+        <div id="date"></div>
+        <div id="time"></div>
+    </div>
+    <script>
+        function updateClock() {
+            const now = new Date();
+
+            // Format Tanggal
+            const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('id-ID', optionsDate);
+
+            // Format Waktu
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+
+            document.getElementById('date').textContent = dateString;
+            document.getElementById('time').textContent = timeString;
+        }
+
+        // Panggil updateClock setiap detik
+        setInterval(updateClock, 1000);
+
+        // Panggil sekali saat halaman dimuat agar tidak ada jeda
+        updateClock();
+    </script>
+</body>
+</html>
