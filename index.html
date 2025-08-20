@@ -3,62 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jam Digital Real-Time</title>
+    <title>Kalkulator Rata-rata</title>
     <style>
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #282c34;
-            color: white;
-            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
             text-align: center;
         }
-        #clock-container {
-            border: 2px solid white;
-            padding: 20px 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-        #date {
-            font-size: 1.5em;
+        h1 {
+            color: #2c3e50;
             margin-bottom: 10px;
         }
-        #time {
-            font-size: 3em;
+        p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        #data-input {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        #calculate-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #calculate-btn:hover {
+            background-color: #2980b9;
+        }
+        #result-container {
+            margin-top: 30px;
+            text-align: left;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+            width: 40%;
+        }
+        td {
+            background-color: #fafafa;
+        }
+        td:last-child {
             font-weight: bold;
+            color: #2c3e50;
         }
     </style>
 </head>
 <body>
-    <div id="clock-container">
-        <div id="date"></div>
-        <div id="time"></div>
+
+    <div class="container">
+        <h1>Kalkulator Rata-rata</h1>
+        <p>Masukkan data angka di bawah ini, pisahkan dengan koma (,)</p>
+
+        <input type="text" id="data-input" placeholder="Contoh: 10, 20, 30, 40">
+        <button id="calculate-btn">Hitung</button>
+
+        <div id="result-container">
+            <!-- Hasil tabel akan ditampilkan di sini -->
+        </div>
     </div>
+
     <script>
-        function updateClock() {
-            const now = new Date();
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            const dataInput = document.getElementById('data-input');
+            const resultContainer = document.getElementById('result-container');
 
-            // Format Tanggal
-            const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const dateString = now.toLocaleDateString('id-ID', optionsDate);
+            calculateBtn.addEventListener('click', function() {
+                const rawInput = dataInput.value;
 
-            // Format Waktu
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const timeString = `${hours}:${minutes}:${seconds}`;
+                // 1. Validasi: Input tidak boleh kosong
+                if (!rawInput.trim()) {
+                    alert('Input tidak boleh kosong.');
+                    resultContainer.innerHTML = '';
+                    return;
+                }
 
-            document.getElementById('date').textContent = dateString;
-            document.getElementById('time').textContent = timeString;
-        }
+                // 2. Proses input: pisahkan dengan koma, bersihkan, dan filter data kosong
+                const stringInputs = rawInput.split(',')
+                                             .map(item => item.trim())
+                                             .filter(item => item !== '');
 
-        // Panggil updateClock setiap detik
-        setInterval(updateClock, 1000);
+                if (stringInputs.length === 0) {
+                    alert('Masukkan data angka yang valid.');
+                    resultContainer.innerHTML = '';
+                    return;
+                }
 
-        // Panggil sekali saat halaman dimuat agar tidak ada jeda
-        updateClock();
+                // 3. Validasi: Pastikan semua input adalah angka
+                const numbers = [];
+                for (const str of stringInputs) {
+                    // Cek apakah itu angka yang valid (termasuk desimal dan negatif)
+                    if (isNaN(parseFloat(str)) || !isFinite(str)) {
+                        alert(`Input tidak valid: "${str}". Harap masukkan angka yang dipisahkan oleh koma.`);
+                        resultContainer.innerHTML = '';
+                        return;
+                    }
+                    numbers.push(parseFloat(str));
+                }
+
+                // 4. Lakukan Perhitungan
+                const count = numbers.length;
+                const sum = numbers.reduce((total, current) => total + current, 0);
+                const average = sum / count;
+
+                // 5. Tampilkan hasil dalam tabel
+                const originalDataString = numbers.join(', ');
+                const tableHTML = `
+                    <table>
+                        <tr>
+                            <th>Keterangan</th>
+                            <td><strong>Nilai</strong></td>
+                        </tr>
+                        <tr>
+                            <th>Angka yang Diinput</th>
+                            <td>${originalDataString}</td>
+                        </tr>
+                        <tr>
+                            <th>Jumlah Data</th>
+                            <td>${count}</td>
+                        </tr>
+                        <tr>
+                            <th>Total (Sum)</th>
+                            <td>${sum.toLocaleString('id-ID')}</td>
+                        </tr>
+                        <tr>
+                            <th>Rata-rata</th>
+                            <td>${average.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        </tr>
+                    </table>
+                `;
+
+                resultContainer.innerHTML = tableHTML;
+            });
+        });
     </script>
 </body>
 </html>
