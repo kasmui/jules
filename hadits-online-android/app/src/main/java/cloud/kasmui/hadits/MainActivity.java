@@ -216,7 +216,7 @@ public class MainActivity extends Activity {
             int idx = contentDisposition.toLowerCase().indexOf("filename=");
             if (idx >= 0) {
                 name = contentDisposition.substring(idx + 9)
-                        .replace(""", "")
+                        .replace("\"", "")
                         .trim();
             }
         }
@@ -345,7 +345,7 @@ public class MainActivity extends Activity {
         return value.replace("&", "&amp;")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;")
-                .replace(""", "&quot;")
+                .replace("\"", "&quot;")
                 .replace("'", "&#39;");
     }
 
