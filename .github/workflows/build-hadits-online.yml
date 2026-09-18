@@ -3,7 +3,6 @@ name: Build Hadits Online APK
 on:
   push:
     paths:
-      - 'hadits-online-android/**'
       - '.github/workflows/build-hadits-online.yml'
   workflow_dispatch:
 
@@ -13,8 +12,10 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
+      - name: Checkout Android source branch
         uses: actions/checkout@v4
+        with:
+          ref: chatgpt-hadits-apk-fix-20260919
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -30,6 +31,11 @@ jobs:
       - name: Build debug APK
         working-directory: hadits-online-android
         run: gradle :app:assembleDebug --stacktrace
+
+      - name: Show APK info
+        run: |
+          ls -lh hadits-online-android/app/build/outputs/apk/debug/
+          sha256sum hadits-online-android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
