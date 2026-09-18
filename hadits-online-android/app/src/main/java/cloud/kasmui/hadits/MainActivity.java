@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-    private static final String START_URL = "https://kasmui.cloud/hadits/index.php";
+    private static final String START_URL = "https://kasmui.cloud/hadits/";
     private static final String ALLOWED_HOST = "kasmui.cloud";
 
     private WebView webView;
@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
         s.setJavaScriptCanOpenWindowsAutomatically(true);
         s.setMediaPlaybackRequiresUserGesture(false);
-        s.setUserAgentString(s.getUserAgentString() + " HaditsOnlineAndroid/2.0");
+        s.setUserAgentString(s.getUserAgentString() + " HaditsKasmuiAndroid/1.0.0");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             s.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
